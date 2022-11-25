@@ -1,0 +1,18 @@
+server:
+  port: 8080
+spring:
+  thymeleaf:
+    cache: false
+    enabled: true
+    encoding: utf-8
+    prefix: classpath:/templates/
+    suffix: .html
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+    username: root
+    password: fu20010412
+    druid:
+      url: jdbc:mysql://localhost:3306/emcms?useUnicode=true&characterEncoding=UTF-8&useSSL=true&serverTimezone=GMT%2B8
+  constant:
+    upload-path: C:/Users/付意敏/Desktop/test/

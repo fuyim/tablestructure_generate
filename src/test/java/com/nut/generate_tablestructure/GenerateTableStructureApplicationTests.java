@@ -1,7 +1,9 @@
 package com.nut.generate_tablestructure;
 
+import cn.hutool.core.util.URLUtil;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.sql.DataSource;
@@ -15,12 +17,16 @@ import java.util.Map;
 
 @SpringBootTest
 class GenerateTableStructureApplicationTests {
-
+    @Value("${spring.constant.upload-path}")
+    private String uploadPath;
     @Autowired
     private DataSource dataSource;
 
     @Test
     void contextLoads() {
+        String encode = URLUtil.encode(uploadPath);
+        System.out.println(encode);
+        System.out.println(uploadPath);
     }
 
 

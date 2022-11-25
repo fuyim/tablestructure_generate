@@ -4,7 +4,10 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.URLUtil;
 import cn.hutool.poi.excel.ExcelUtil;
 import cn.hutool.poi.excel.ExcelWriter;
+import cn.hutool.poi.excel.StyleSet;
 import lombok.extern.log4j.Log4j2;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.IndexedColors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -51,12 +54,13 @@ public class GenerateTableController {
         ResultSet tables = metaData.getTables(connection.getCatalog(), null, "t_%", new String[]{"TABLE"});
         ResultSet columns = null;
 
-        String encode = URLUtil.encode(uploadPath);
-        System.out.println(encode);
-        ExcelWriter writer = ExcelUtil.getWriter(URLUtil.decode(uploadPath)+"test.xlsx");
+
+        ExcelWriter writer = ExcelUtil.getWriter(uploadPath+"test.xlsx");
+
         while(tables.next()){
             String tableName = tables.getString("TABLE_NAME");
             writer.merge(3,tableName);
+            writer.autoSizeColumnAll();
             writer.writeRow(title);
             columns = metaData.getColumns(null, "%", tableName, "%");
             while (columns.next()){
