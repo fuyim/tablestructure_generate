@@ -117,6 +117,7 @@ public class GenerateTableController {
             }
         }
         writer.close();
+        DynamicDataSourceContextHolder.clear();
     }
 
 
