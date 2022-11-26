@@ -1,6 +1,8 @@
 server:
   port: 8080
 spring:
+  constant:
+    upload-path: C:/Users/付意敏/Desktop/test/
   thymeleaf:
     cache: false
     enabled: true
@@ -8,11 +10,26 @@ spring:
     prefix: classpath:/templates/
     suffix: .html
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    type: com.alibaba.druid.pool.DruidDataSource
-    username: root
-    password: fu20010412
     druid:
-      url: jdbc:mysql://localhost:3306/emcms?useUnicode=true&characterEncoding=UTF-8&useSSL=true&serverTimezone=GMT%2B8
-  constant:
-    upload-path: C:/Users/付意敏/Desktop/test/
+      stat-view-servlet:
+        enabled: true
+        login-username: admin
+        login-password: 123456
+    dynamic:
+      lazy: true
+      # 配置全局druid参数，请按需配置
+      druid:
+        initial-size: 5
+        max-active: 8
+        min-idle: 3
+        max-wait: 1000
+        validation-query: 'select 1'
+      datasource:
+        master:
+          username: root
+          password: "fu20010412"
+          url: jdbc:mysql://localhost:3306/emcms?useUnicode=true&characterEncoding=UTF-8&useSSL=true&serverTimezone=GMT%2B8
+          driver-class-name: com.mysql.cj.jdbc.Driver
+logging:
+  level:
+    com.baomidou: debug
