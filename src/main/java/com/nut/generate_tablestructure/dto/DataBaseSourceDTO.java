@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 /**
@@ -24,7 +23,7 @@ public class DataBaseSourceDTO implements Serializable {
      * JDBC 用户名
      */
 
-    @NotBlank(message = "名称不能为空")
+    @NotBlank(message = "用户名称不能为空")
     private String username;
 
     @NotBlank(message = "密码不能为空")
