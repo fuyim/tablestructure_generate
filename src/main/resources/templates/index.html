@@ -12,7 +12,7 @@
     <el-alert
             title="使用提示"
             type="info"
-            description="导出excel文件前确保是否有此数据库"
+            description="生成表结构体，在导出文件前确保是否有此数据库"
             :closable="false"
             :center="true"
             show-icon>
@@ -32,7 +32,7 @@
                 <el-input v-model="form.hostname" placeholder="请输入主机号"></el-input>
             </el-form-item>
             <el-form-item>
-                <el-button type="success" @click="exportExcel()">导出excel</el-button>
+                <el-button type="success" @click="exportExcel('form')">导出excel</el-button>
                 <el-button type="primary" @click="exportWord()">导出Word</el-button>
                 <el-button>取消</el-button>
             </el-form-item>
@@ -43,6 +43,7 @@
 </html>
 <script src="https://unpkg.com/vue@2/dist/vue.js"></script>
 <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<script src="https://unpkg.com/axios@1.1.2/dist/axios.min.js"></script>
 <script>
     new Vue({
         el: '#app',
@@ -50,42 +51,46 @@
             var validateUserName = (rule, value, callback) => {
                 if (value === '') {
                     callback(new Error('数据库用户名不能为空！'));
-                } else {
-                    if (this.form.username !== '') {
-                        this.$refs.form.validateField('username');
-                    }
-                    callback();
                 }
-            };
-            var validatePass = (rule, value, callback) => {
-                if (value === '') {
-                    callback(new Error('数据库密码不能为空！'));
-                } else {
-                    if (this.form.password !== '') {
-                        this.$refs.form.validateField('password');
-                    }
-                    callback();
-                }
-            };
-            var checkDatabaseName = (rule, value, callback) => {
-                if (value === '') {
-                    callback(new Error('数据库名称不能为空！'));
-                } else {
-                    if (this.form.databaseName !== '') {
-                        this.$refs.form.validateField('databaseName');
-                    }
-                    callback();
-                }
-            };
-            var validateHostname = (rule, value, callback) => {
-                if (value === '') {
-                    callback(new Error('主机号不能为空！'));
-                } else {
+                setTimeout(()=>{
                     if (this.form.hostname !== '') {
                         this.$refs.form.validateField('hostname');
                     }
                     callback();
+                },1000)
+            };
+            var validatePass = (rule, value, callback) => {
+                if (value === '') {
+                    callback(new Error('数据库密码不能为空！'));
                 }
+                setTimeout(()=>{
+                    if (this.form.hostname !== '') {
+                        this.$refs.form.validateField('hostname');
+                    }
+                    callback();
+                },1000)
+            };
+            var checkDatabaseName = (rule, value, callback) => {
+                if (value === '') {
+                    callback(new Error('数据库名称不能为空！'));
+                }
+                setTimeout(()=>{
+                    if (this.form.hostname !== '') {
+                        this.$refs.form.validateField('hostname');
+                    }
+                    callback();
+                },1000)
+            };
+            var validateHostname = (rule, value, callback) => {
+                if (value === '') {
+                    callback(new Error('主机号不能为空！'));
+                }
+                setTimeout(()=>{
+                    if (this.form.hostname !== '') {
+                        this.$refs.form.validateField('hostname');
+                    }
+                    callback();
+                },1000)
             };
             return {
                 form: {
@@ -96,23 +101,59 @@
                 },
                 rules: {
                     username: [
-                        { validator: validateUserName, trigger: 'blur' }
+                        { validator: validateUserName, type: 'String', trigger: 'blur' }
                     ],
                     password: [
-                        { validator: validatePass, trigger: 'blur' }
+                        { validator: validatePass,type: 'String', trigger: 'blur' }
                     ],
                     databaseName: [
-                        { validator: checkDatabaseName, trigger: 'blur' }
+                        { validator: checkDatabaseName,type: 'String', trigger: 'blur' }
                     ],
                     hostname: [
-                        { validator: validateHostname, trigger: 'blur' }
+                        { validator: validateHostname,type: 'String', trigger: 'blur' }
                     ],
                 }
             }
         },
         methods: {
-            exportExcel() {
-                console.log('submit!');
+            exportExcel(formName) {
+                this.$refs[formName].validate((valid) => {
+                    if (valid) {
+                        axios({
+                            method:'POST',
+                            url: '/generate/generateExcel',
+                            responseType: 'blob',
+                            data: this.form,
+                        }).then(res =>{
+                            let blob = new Blob([res.data], {
+                                type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8'
+                            })
+                            let contentDisposition = res.headers['content-disposition'] //从response的headers中获取filename, 后端response.setHeader("Content-disposition", "attachment; filename=xxxx.docx") 设置的文件名;
+                            let patt = new RegExp('filename=([^;]+\\.[^\\.;]+);*')
+                            let result = patt.exec(contentDisposition)
+                            let thename = decodeURI(result[1]) //使用decodeURI对名字进行解码
+                            let downloadElement = document.createElement('a')
+                            let href = window.URL.createObjectURL(blob) //创建下载的链接
+                            downloadElement.style.display = 'none'
+                            downloadElement.href = href
+                            downloadElement.download = thename //下载后文件名
+                            document.body.appendChild(downloadElement)
+                            downloadElement.click() //点击下载
+                            document.body.removeChild(downloadElement) //下载完成移除元素
+                            window.URL.revokeObjectURL(href) //释放掉blob对象
+
+                        }).catch(err =>{
+                            console.log(err)
+                        })
+                    } else {
+                        console.log('error submit!!');
+                        return false;
+                    }
+                });
+
+
+
+
             },
             exportWord(){
                 console.log("导出word！")

@@ -1,12 +1,18 @@
 package com.nut.generate_tablestructure;
 
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.URLUtil;
+import cn.hutool.poi.word.Word07Writer;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.sql.DataSource;
+import java.awt.*;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
@@ -63,6 +69,12 @@ class GenerateTableStructureApplicationTests {
                 rows.add(remarks);
             }
         }
+    }
+
+
+    @Test
+    public void word(){
+
     }
 
 }
