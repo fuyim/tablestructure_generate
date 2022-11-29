@@ -6,9 +6,11 @@ package com.nut.enums;
  * @email 3271758240@qq.com
  */
 public enum GenerateTableEnum {
-    DATABASE_PASSWORD_OR_USER_ERROR(500,"数据库用户名或密码错误"),
-    DATABASE_NAME_NOT_EXIST(500,"数据库名称不存在"),
-    DATABASE_CONNECT(500,"数据库连接失败");
+    DATABASE_PASSWORD_OR_USER_ERROR(50001,"数据库用户名或密码错误"),
+    DATABASE_NAME_NOT_EXIST(50002,"数据库名称不存在"),
+    DATABASE_CONNECT(50003,"数据库连接失败"),
+    SYSTEM_ERROR(50004,"系统错误"),
+    DATABASE_PARAMETER_ERROR(50005,"数据库连接参数异常");
     private Integer code;
 
     private String message;

@@ -7,6 +7,7 @@
         <module>generate_common</module>
         <module>generate_system</module>
         <module>generate_admin</module>
+        <module>generate_framework</module>
     </modules>
 
     <groupId>com.nut</groupId>
@@ -37,7 +38,7 @@
             <dependency>
                 <groupId>mysql</groupId>
                 <artifactId>mysql-connector-java</artifactId>
-                <version>8.0.23</version>
+                <version>8.0.30</version>
                 <scope>runtime</scope>
             </dependency>
             <dependency>

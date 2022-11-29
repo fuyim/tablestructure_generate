@@ -1,6 +1,8 @@
 package com.nut.controller;
 
 import com.nut.domain.dto.DataBaseSourceDTO;
+import com.nut.enums.GenerateTableEnum;
+import com.nut.exception.GenerateTableException;
 import com.nut.servcice.GenerateTableService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,8 +38,28 @@ public class GenerateTableController {
     @ResponseBody
     public void generateExcel(@Valid @RequestBody DataBaseSourceDTO dto, BindingResult result, HttpServletResponse response) {
 
-        generateTableService.generateExcel(dto,response);
-
+        boolean hasErrors = result.hasErrors();
+        if (hasErrors){
+            throw new GenerateTableException(GenerateTableEnum.DATABASE_PARAMETER_ERROR);
+        }else {
+            try {
+                generateTableService.generateExcel(dto,response);
+            } catch (RuntimeException e) {
+                throw new GenerateTableException(GenerateTableEnum.SYSTEM_ERROR,"连接异常,检查连接");
+            }
+        }
     }
+
+    @RequestMapping(value = "/test",method = RequestMethod.POST)
+    @ResponseBody
+    public void test(){
+
+        try {
+            int a = 10/0;
+        } catch (Exception e) {
+            throw new GenerateTableException(GenerateTableEnum.SYSTEM_ERROR) ;
+        }
+    }
+
 
 }
