@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+
 /**
  * @author fym
  * @date 2022/11/23 12:35
@@ -49,17 +50,5 @@ public class GenerateTableController {
             }
         }
     }
-
-    @RequestMapping(value = "/test",method = RequestMethod.POST)
-    @ResponseBody
-    public void test(){
-
-        try {
-            int a = 10/0;
-        } catch (Exception e) {
-            throw new GenerateTableException(GenerateTableEnum.SYSTEM_ERROR) ;
-        }
-    }
-
 
 }
