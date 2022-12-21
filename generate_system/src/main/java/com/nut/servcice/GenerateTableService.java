@@ -15,4 +15,5 @@ public interface GenerateTableService {
     void generateExcel(DataBaseSourceDTO dto, HttpServletResponse response);
 
 
+    void generateWord(DataBaseSourceDTO dto, HttpServletResponse response);
 }

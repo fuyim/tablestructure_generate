@@ -51,4 +51,15 @@ public class GenerateTableController {
         }
     }
 
+    @RequestMapping(value = "/generateWord",method = RequestMethod.POST)
+    @ResponseBody
+    public void generateWord(@Valid @RequestBody DataBaseSourceDTO dto,BindingResult result,HttpServletResponse response){
+        boolean hasErrors = result.hasErrors();
+        if (hasErrors){
+            throw new GenerateTableException(GenerateTableEnum.DATABASE_PARAMETER_ERROR);
+        }else {
+            generateTableService.generateWord(dto,response);
+        }
+    }
+
 }
