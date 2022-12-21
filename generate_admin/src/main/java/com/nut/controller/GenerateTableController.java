@@ -58,7 +58,11 @@ public class GenerateTableController {
         if (hasErrors){
             throw new GenerateTableException(GenerateTableEnum.DATABASE_PARAMETER_ERROR);
         }else {
-            generateTableService.generateWord(dto,response);
+            try {
+                generateTableService.generateWord(dto,response);
+            } catch (RuntimeException e) {
+                throw new GenerateTableException(GenerateTableEnum.SYSTEM_ERROR,"连接异常,检查连接");
+            }
         }
     }
 
