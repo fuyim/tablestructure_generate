@@ -1,9 +1,11 @@
 package com.nut.controller;
 
+import com.nut.annotation.RepeatSubmit;
 import com.nut.domain.dto.DataBaseSourceDTO;
 import com.nut.enums.GenerateTableEnum;
 import com.nut.exception.GenerateTableException;
 import com.nut.servcice.GenerateTableService;
+import com.nut.utils.AjaxResult;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -37,7 +39,7 @@ public class GenerateTableController {
      */
     @RequestMapping(value = "/generateExcel",method = RequestMethod.POST)
     @ResponseBody
-    public void generateExcel(@Valid @RequestBody DataBaseSourceDTO dto, BindingResult result, HttpServletResponse response) {
+    public void generateExcel(@Valid DataBaseSourceDTO dto, BindingResult result, HttpServletResponse response) {
 
         boolean hasErrors = result.hasErrors();
         if (hasErrors){
@@ -53,7 +55,7 @@ public class GenerateTableController {
 
     @RequestMapping(value = "/generateWord",method = RequestMethod.POST)
     @ResponseBody
-    public void generateWord(@Valid @RequestBody DataBaseSourceDTO dto,BindingResult result,HttpServletResponse response){
+    public void generateWord(@Valid DataBaseSourceDTO dto,BindingResult result,HttpServletResponse response){
         boolean hasErrors = result.hasErrors();
         if (hasErrors){
             throw new GenerateTableException(GenerateTableEnum.DATABASE_PARAMETER_ERROR);
@@ -64,6 +66,15 @@ public class GenerateTableController {
                 throw new GenerateTableException(GenerateTableEnum.SYSTEM_ERROR,"连接异常,检查连接");
             }
         }
+    }
+
+    @RepeatSubmit(interval = 1000)
+    @RequestMapping(value = "/test",method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxResult test(DataBaseSourceDTO dto){
+        String databaseName = dto.getDatabaseName();
+        String hostname = dto.getHostname();
+        return AjaxResult.success("test",dto);
     }
 
 }

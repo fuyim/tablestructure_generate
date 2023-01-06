@@ -16,4 +16,8 @@ public class StringUtils {
     public static <T> Boolean isNotNull(T o){
         return !isNull(o);
     }
+
+    public static boolean isEmpty(String nowBody) {
+        return isNull(nowBody) || "".equals(nowBody.trim());
+    }
 }

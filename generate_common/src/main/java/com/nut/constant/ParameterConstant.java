@@ -25,4 +25,10 @@ public class ParameterConstant {
 
     public final static int errCode = 500;
 
+    public static final String UTF8 = "UTF-8";
+
+    public static final String REPEAT_SUBMIT_KEY = "repeat_submit";
+
+    public static final String CONTENT_TYPE = "application/json";
+
 }
