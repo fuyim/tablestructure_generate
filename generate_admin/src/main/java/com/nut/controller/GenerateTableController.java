@@ -7,6 +7,7 @@ import com.nut.exception.GenerateTableException;
 import com.nut.servcice.GenerateTableService;
 import com.nut.utils.AjaxResult;
 import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -25,7 +26,7 @@ import javax.validation.Valid;
  * @email 3271758240@qq.com
  */
 @Controller
-@Log4j2
+@Slf4j
 @RequestMapping(value = "/generate")
 public class GenerateTableController {
 
@@ -36,6 +37,7 @@ public class GenerateTableController {
 
     /**
      * 根据目标数据源生成excel
+     * FIXME
      */
     @RequestMapping(value = "/generateExcel",method = RequestMethod.POST)
     @ResponseBody
@@ -53,6 +55,7 @@ public class GenerateTableController {
         }
     }
 
+    // FIXME 代码需要更改
     @RequestMapping(value = "/generateWord",method = RequestMethod.POST)
     @ResponseBody
     public void generateWord(@Valid DataBaseSourceDTO dto,BindingResult result,HttpServletResponse response){
@@ -68,13 +71,10 @@ public class GenerateTableController {
         }
     }
 
-    @RepeatSubmit(interval = 1000)
-    @RequestMapping(value = "/test",method = RequestMethod.POST)
-    @ResponseBody
-    public AjaxResult test(DataBaseSourceDTO dto){
-        String databaseName = dto.getDatabaseName();
-        String hostname = dto.getHostname();
-        return AjaxResult.success("test",dto);
-    }
+    /**
+     * TODO 解析出表字段返回给前端生成表格，可以通过复制键将表格复制成文本
+     * TODO 通过文本生成excel文档或者word文档，也可在sql生成页导入文本生成sql脚本
+     */
+
 
 }

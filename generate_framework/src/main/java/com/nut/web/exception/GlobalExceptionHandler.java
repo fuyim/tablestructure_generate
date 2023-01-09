@@ -1,10 +1,13 @@
 package com.nut.web.exception;
 
+import cn.hutool.log.Log;
+import cn.hutool.log.LogFactory;
 import com.nut.enums.GenerateTableEnum;
+import com.nut.enums.SystemErrorEnum;
 import com.nut.exception.GenerateTableException;
+import com.nut.exception.GlobalException;
+import com.nut.manager.facade.GenerateFacade;
 import com.nut.utils.AjaxResult;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -17,13 +20,18 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+    private static final Log log = LogFactory.get(GlobalExceptionHandler.class);
 
 
     @ExceptionHandler(value = GenerateTableException.class)
     public AjaxResult generateTableException(GenerateTableException e){
         log.error(e.getMessage(), e);
         return AjaxResult.error(e.getCode(),e.getMessage());
+    }
+
+    public AjaxResult globalException(GlobalException e){
+        log.error(e.getMessage(),e);
+        return AjaxResult.error(e.getMessage());
     }
 
 

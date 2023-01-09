@@ -1,4 +1,4 @@
-package com.nut.aop;
+package com.nut.aspectj;
 
 import cn.hutool.cache.impl.TimedCache;
 import cn.hutool.extra.servlet.ServletUtil;
@@ -30,12 +30,12 @@ import java.util.*;
  */
 @Aspect
 @Component
-public class RepeatSubmitAop {
+public class RepeatSubmitAspectj {
 
     @Autowired
     private TimedCache<String,Object> timedCache;
 
-    private static final Log log = LogFactory.get(RepeatSubmitAop.class);
+    private static final Log log = LogFactory.get(RepeatSubmitAspectj.class);
 
     public final String REPEAT_PARAMS = "repeatParams";
 
@@ -74,7 +74,6 @@ public class RepeatSubmitAop {
             nowDataMap.put(REPEAT_PARAMS, nowBody);
             nowDataMap.put(REPEAT_TIME, System.currentTimeMillis());
 
-            // 请求地址（作为存放cache的key值）
             String url = request.getRequestURI();
 
             // 唯一标识(指定key + url + sessionID)
