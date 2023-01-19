@@ -38,7 +38,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = RuntimeException.class)
     public AjaxResult runtimeException(RuntimeException e){
         log.error(e.getMessage(),e);
-        return AjaxResult.error(GenerateTableEnum.SYSTEM_ERROR.getCode(), e.getMessage());
+        return AjaxResult.error(SystemErrorEnum.SYSTEM_ERROR.getCode(), e.getMessage());
     }
 
 }
