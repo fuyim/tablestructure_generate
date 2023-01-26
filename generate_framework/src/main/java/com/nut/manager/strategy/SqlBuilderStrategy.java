@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 
 /**
  * sql构建管理
+ *
  * @author fym
  * @date 2023/1/8 11:38
  * @email 3271758240@qq.com
@@ -30,20 +31,20 @@ public class SqlBuilderStrategy {
 
 
     public SqlBuilderStrategy(String dialectType) {
-        if (StringUtils.isNull(dialectType)){
+        if (StringUtils.isNull(dialectType)) {
             this.sqlDialect = SQLDialectFactory.getSQLDialect(OracleDialect.class.getName());
         }
-        if (dialectType.equalsIgnoreCase("oracle")){
+        if (dialectType.equalsIgnoreCase("oracle")) {
             this.sqlDialect = SQLDialectFactory.getSQLDialect(OracleDialect.class.getName());
-        }else if (dialectType.equalsIgnoreCase("mysql")){
+        } else if (dialectType.equalsIgnoreCase("mysql")) {
             this.sqlDialect = SQLDialectFactory.getSQLDialect(MySQLDialect.class.getName());
-        }else if (dialectType.equalsIgnoreCase("sqlserver")){
+        } else if (dialectType.equalsIgnoreCase("sqlserver")) {
             this.sqlDialect = SQLDialectFactory.getSQLDialect(SQLServerDialect.class.getName());
         }
 
     }
 
-    public SqlBuilderStrategy(SQLDialect sqlDialect){
+    public SqlBuilderStrategy(SQLDialect sqlDialect) {
         this.sqlDialect = sqlDialect;
     }
 
@@ -58,20 +59,17 @@ public class SqlBuilderStrategy {
 
 
     /**
-     *
      * @param sqlTableParams
-     * @return
-     * example:
+     * @return example:
      * mysql
      * -- prefixComment
      * CREATE TABLE IF NOT EXISTS databaseName.tableName
      * (
-     *  `fieldName` fieldType(fieldTypeSize) default value notNull comment ''
+     * `fieldName` fieldType(fieldTypeSize) default value notNull comment ''
      * ) comment suffixComment
      * oracle
-     *
      */
-    public String buildCreateTableSql(SqlTableParams sqlTableParams){
+    public String buildCreateTableSql(SqlTableParams sqlTableParams) {
         // 构建sql模板
         String sqlTemplate = "%s\n" +
                 "CREATE TABLE IF NOT EXISTS %s\n" +
@@ -82,32 +80,41 @@ public class SqlBuilderStrategy {
         String tableName = sqlDialect.wrapTableName(sqlTableParams.getTableName());
         // 数据库名称
         String databaseName = sqlTableParams.getDatabaseName();
-        if (StringUtils.isNotNull(databaseName)) {
-            tableName = String.format("%s.%s",databaseName,tableName);
+        if (!StringUtils.isEmpty(databaseName)) {
+            tableName = String.format("%s.%s", databaseName, tableName);
         }
 
         // 表注释
         String tableComment = sqlTableParams.getTableComment();
-        if (StringUtils.isNull(tableComment)) {
+        if (StringUtils.isEmpty(tableComment)) {
             tableComment = tableName;
         }
-        String prefixComment = String.format("-- %s",tableComment);
+        String prefixComment = String.format("-- %s", tableComment);
         String suffixComment = String.format("COMMENT '%s'", tableComment);
-        // 构造表的字段
+
+
+        // 构造表的字段'
+        int repeatSize = 0;
         Map<String, Field> repeatFieldListMap = new HashMap<>();
         List<Field> fieldList = sqlTableParams.getFieldList();
         // 重复字段集合
         List<String> repeatList = fieldList.stream().collect(Collectors.groupingBy(Field -> Field.getFieldName(), Collectors.counting()))
                 .entrySet().stream().filter(e -> e.getValue() > 1).map(Map.Entry::getKey).collect(Collectors.toList());
+        if (repeatList.size() == 0) {
+            repeatSize = 1;
+        } else {
+            repeatSize = repeatList.size();
+        }
         StringBuilder fieldBuilder = new StringBuilder();
         for (int i = 0; i < fieldList.size(); i++) {
             Field field = fieldList.get(i);
             Field repeatField = repeatFieldListMap.get(field.getFieldName());
-            if (Objects.nonNull(repeatField)){
-                log.info("有重复字段"+repeatField.getFieldName());
-            }else {
-                fieldBuilder.append(builderFieldSql(field,repeatFieldListMap));
-                if (i != fieldList.size() - repeatList.size()) {
+            if (Objects.nonNull(repeatField)) {
+                log.info("有重复字段" + repeatField.getFieldName());
+            } else {
+                fieldBuilder.append(builderFieldSql(field, repeatFieldListMap));
+
+                if (i != fieldList.size() - repeatSize) {
                     fieldBuilder.append(",");
                     fieldBuilder.append("\n");
                 }
@@ -117,17 +124,20 @@ public class SqlBuilderStrategy {
         String fieldStr = fieldBuilder.toString();
         String sql = String.format(sqlTemplate, prefixComment, tableName, fieldStr, suffixComment);
         return sql;
-    };
+    }
+
+    ;
 
     /**
      * 构建字段sql
+     *
      * @param field
      * @return
      */
-    public String builderFieldSql(Field field,Map<String, Field> repeatFieldListMap){
+    public String builderFieldSql(Field field, Map<String, Field> repeatFieldListMap) {
         Objects.requireNonNull(field);
         String fieldName = sqlDialect.wrapFieldName(field.getFieldName());
-        repeatFieldListMap.put(field.getFieldName(),field);
+        repeatFieldListMap.put(field.getFieldName(), field);
         String fieldType = field.getFieldType();
         String defaultValue = field.getDefaultValue();
         String comment = field.getComment();
@@ -143,20 +153,20 @@ public class SqlBuilderStrategy {
         fieldStrBuilder.append(" ").append(fieldType);
         // 拼接类型
         if (StringUtils.isNotNull(fieldTypeSize) && fieldTypeSize != 0) {
-            fieldStrBuilder.append(String.format("(%s)",fieldTypeSize));
+            fieldStrBuilder.append(String.format("(%s)", fieldTypeSize));
         }
         // 拼接默认值
-        if (StringUtils.isNotNull(defaultValue)) {
-            fieldStrBuilder.append(" ").append("DEFAULT ").append(getValue(field,defaultValue));
+        if (!defaultValue.isEmpty()) {
+            fieldStrBuilder.append(" ").append("DEFAULT ").append(getValue(field, defaultValue));
         }
         // 拼接是否为空
         fieldStrBuilder.append(" ").append(notNull ? "NOT NULL" : "NULL");
         // 添加更新时间
-        if (StringUtils.isNotNull(onUpdate)) {
+        if (!StringUtils.isEmpty(onUpdate)) {
             fieldStrBuilder.append(" ").append("ON UPDATE ").append(onUpdate);
         }
         // 添加注释
-        if (StringUtils.isNotNull(comment)) {
+        if (!StringUtils.isEmpty(comment)) {
             fieldStrBuilder.append(" ").append(String.format("COMMENT '%s'", comment));
         }
         // 主键
@@ -171,7 +181,7 @@ public class SqlBuilderStrategy {
     }
 
 
-    public String getValue(Field field,Object value){
+    public String getValue(Field field, Object value) {
         if (field == null || value == null) {
             return "''";
         }
