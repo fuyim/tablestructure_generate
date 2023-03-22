@@ -1,0 +1,55 @@
+package ${packageName}.domain;
+
+import java.io.Serializable;
+
+#foreach($importPackage in $importList)
+import ${importPackage}
+#end
+
+/**
+ * ${tableComment}对象 ${tableName}
+ */
+#if($className.split('_').size() > 1 )
+    #set($ClassName=${className.split("_")[1].substring(0,1).toUpperCase()} + ${className.split("_")[1].substring(1)})
+#else
+    #set($ClassName=${className.substring(0,1).toUpperCase()} + ${className.substring(1)})
+#end
+public class ${ClassName} implements Serializable{
+
+    private static final long serialVersionUID = 1L;
+
+#foreach ($field in $fields)
+#if( $field.fieldName.split('_').size() > 1 )
+    #set($AttrName=${field.fieldName.split('_')[0]}+${field.fieldName.split('_')[1].substring(0,1).toUpperCase()}+${field.fieldName.substring(1).split('_')[1].substring(1)})
+#end
+    private $field.javaType $AttrName;
+#end
+
+#foreach ($field in $fields)
+#if( $field.fieldName.split('_').size() > 1 )
+    #set($AttrName=$field.fieldName.substring(0,1).toUpperCase() + ${field.fieldName.substring(1).split('_')[0]}+${field.fieldName.substring(1).split('_')[1].substring(0,1).toUpperCase()}+${field.fieldName.substring(1).split('_')[1].substring(1)})
+    #set($AttrName=${field.fieldName.split('_')[0]}+${field.fieldName.split('_')[1].substring(0,1).toUpperCase()}+${field.fieldName.substring(1).split('_')[1].substring(1)})
+#else
+    #set($AttrName=$field.fieldName.substring(0,1).toUpperCase() + ${field.fieldName.substring(1)})
+#end
+    public void set${AttrName}($field.javaType $AttrName){
+        this.$AttrName = $AttrName;
+    }
+
+    public $field.javaType get${AttrName}(){
+        return $AttrName;
+    }
+#end
+
+    @Override
+    public String toString() {
+        return "${ClassName}{" +
+#foreach ($field in $fields)
+    #if( $field.fieldName.split('_').size() > 1 )
+        #set($AttrName=${field.fieldName.split('_')[0]}+${field.fieldName.split('_')[1].substring(0,1).toUpperCase()}+${field.fieldName.substring(1).split('_')[1].substring(1)})
+    #end
+        "${AttrName}='" + ${AttrName} + '\'' +
+#end
+        "}";
+    }
+}

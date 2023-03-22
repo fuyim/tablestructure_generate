@@ -40,4 +40,7 @@ public class SqlTableParams implements Serializable{
     @Valid
     @Size(min = 1, message = "字段至少有一个")
     private List<Field> fieldList;
+
+    // 包名
+    private String packageName;
 }

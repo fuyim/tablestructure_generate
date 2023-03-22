@@ -10,37 +10,40 @@ import com.nut.utils.StringUtils;
  */
 public enum FieldTypeEnum {
 
-    TINYINT("tinyint"),
-    SMALLINT("smallint"),
-    MEDIUMINT("mediumint"),
-    INT("int"),
-    BIGINT("bigint"),
-    FLOAT("float"),
-    DOUBLE("double"),
-    DECIMAL("decimal"),
-    DATE("date"),
-    TIME("time"),
-    YEAR("year"),
-    DATETIME("datetime"),
-    TIMESTAMP("timestamp"),
-    CHAR("char"),
-    VARCHAR("varchar"),
-    TINYTEXT("tinytext"),
-    TEXT("text"),
-    MEDIUMTEXT("mediumtext"),
-    LONGTEXT("longtext"),
-    TINYBLOB("tinyblob"),
-    BLOB("blob"),
-    MEDIUMBLOB("mediumblob"),
-    LONGBLOB("longblob"),
-    BINARY("binary"),
-    VARBINARY("varbinary");
+    TINYINT("tinyint","Integer"),
+    SMALLINT("smallint","Integer"),
+    MEDIUMINT("mediumint","Integer"),
+    INT("int","Integer"),
+    BIGINT("bigint","Long"),
+    FLOAT("float","Double"),
+    DOUBLE("double","Double"),
+    DECIMAL("decimal","BigDecimal"),
+    DATE("date","Date"),
+    TIME("time","Time"),
+    YEAR("year","Integer"),
+    DATETIME("datetime","Date"),
+    TIMESTAMP("timestamp","Long"),
+    CHAR("char","String"),
+    VARCHAR("varchar","String"),
+    TINYTEXT("tinytext","String"),
+    TEXT("text","String"),
+    MEDIUMTEXT("mediumtext","String"),
+    LONGTEXT("longtext","String"),
+    TINYBLOB("tinyblob","byte[]"),
+    BLOB("blob","byte[]"),
+    MEDIUMBLOB("mediumblob","byte[]"),
+    LONGBLOB("longblob","byte[]"),
+    BINARY("binary","byte[]"),
+    VARBINARY("varbinary","byte[]");
 
     private final String value;
 
+    private final String javaType;
 
-    FieldTypeEnum(String value) {
+
+    FieldTypeEnum(String value,String javaType) {
         this.value = value;
+        this.javaType = javaType;
     }
 
     /**
@@ -49,7 +52,7 @@ public enum FieldTypeEnum {
      * @return
      */
     public static FieldTypeEnum getEnumByValue(String fieldType) {
-        if (StringUtils.isNotNull(fieldType)) {
+        if (StringUtils.isNull(fieldType)) {
             return null;
         }
         for (FieldTypeEnum fieldTypeEnum : FieldTypeEnum.values()) {
@@ -62,6 +65,10 @@ public enum FieldTypeEnum {
 
     public String getValue() {
         return value;
+    }
+
+    public String getJavaType () {
+        return javaType;
     }
 
 }

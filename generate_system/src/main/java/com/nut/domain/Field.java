@@ -47,4 +47,23 @@ public class Field implements Serializable {
 
     // 更新时间
     private String onUpdate;
+
+    private String javaType;
+
+    @Override
+    public String toString() {
+        return "Field{" +
+                "fieldName='" + fieldName + '\'' +
+                ", fieldType='" + fieldType + '\'' +
+                ", fieldTypeSize=" + fieldTypeSize +
+                ", notNull=" + notNull +
+                ", comment='" + comment + '\'' +
+                ", defaultValue='" + defaultValue + '\'' +
+                ", primaryKey=" + primaryKey +
+                ", autoIncrement=" + autoIncrement +
+                ", onUpdate='" + onUpdate + '\'' +
+                ", javaType='" + javaType + '\'' +
+                '}';
+    }
+
 }

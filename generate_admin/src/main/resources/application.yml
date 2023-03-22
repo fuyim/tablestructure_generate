@@ -32,3 +32,6 @@ logging:
 mybatis:
   type-aliases-package: com.nut.**.domain
   mapper-locations: classpath*:mapper/*Mapper.xml
+
+
+

@@ -1,0 +1,6 @@
+<html>
+<body>
+    $!{message}
+    $!{time}
+</body>
+</html>

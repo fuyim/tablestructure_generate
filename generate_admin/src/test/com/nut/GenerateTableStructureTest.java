@@ -142,4 +142,17 @@ public class GenerateTableStructureTest {
         document.write(outputStream);
         outputStream.close();
     }
+
+
+    @Test
+    public void test04(){
+        String test = "create_time";
+        String no = "idtest";
+        String[] s = test.split("_");
+        System.out.println(s.length);
+        String[] notest = no.split("_");
+        System.out.println(notest.length);
+
+
+    }
 }
