@@ -1,0 +1,44 @@
+package ${packageName}.mapper;
+import java.util.List;
+#if($className.split('_').size() > 1 )
+    #set($ClassName=${className.split("_")[1].substring(0,1).toUpperCase()} + ${className.split("_")[1].substring(1)})
+#else
+    #set($ClassName=${className.substring(0,1).toUpperCase()} + ${className.substring(1)})
+#end
+import ${packageName}.domain.${ClassName};
+
+public interface ${ClassName}Mapper {
+
+#foreach ($field in $fields)
+    #if(${field.primaryKey})
+    /**
+     * 根据主键ID查询
+     */
+    public ${ClassName} select${ClassName}By${field.fieldName}(${field.fieldType} ${field.fieldName});
+    #end
+#end
+
+    /**
+     * 查询所有
+     */
+    public List<${ClassName}> get${ClassName}List();
+
+    /**
+     * 添加
+     */
+    public int add${ClassName}(${ClassName} ${ClassName.toLowerCase()})
+
+#foreach ($field in $fields)
+    #if(${field.primaryKey})
+    /**
+     * 删除
+     */
+    public int delete${ClassName}By${field.fieldName}(${field.fieldType} ${field.fieldName});
+
+    /**
+     * 修改
+     */
+    public int update${ClassName}By${field.fieldName}(${field.fieldType} ${field.fieldName});
+    #end
+#end
+}

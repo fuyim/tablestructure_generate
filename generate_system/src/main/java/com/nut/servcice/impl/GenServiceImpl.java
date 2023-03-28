@@ -36,10 +36,14 @@ public class GenServiceImpl implements GenService {
 
         // Velocity初始化
         VelocityContext vc = velocityContext(sqlTableParams);
-        StringWriter sw = new StringWriter();
-        Template template = velocityEngine.getTemplate("vm/java/domain.java.vm");
-        template.merge(vc,sw);
-        dataMap.put("domain",sw.toString());
+        List<String> velocityTemplate = getVelocityTemplate();
+        for (String template : velocityTemplate) {
+            StringWriter sw = new StringWriter();
+            Template tpl = velocityEngine.getTemplate(template);
+            tpl.merge(vc,sw);
+            template = template.substring(template.lastIndexOf("/")+1,template.indexOf("."));
+            dataMap.put(template,sw.toString());
+        }
         return dataMap;
     }
 
@@ -92,6 +96,20 @@ public class GenServiceImpl implements GenService {
 
         }
         return importList;
+    }
+
+
+    /**
+     * 获取velocity模板
+     */
+    public List<String> getVelocityTemplate(){
+        List<String> velocityList = new ArrayList<>();
+        velocityList.add("vm/java/domain.java.vm");
+        velocityList.add("vm/java/mapper.java.vm");
+        velocityList.add("vm/java/service.java.vm");
+        velocityList.add("vm/java/serviceImpl.java.vm");
+        velocityList.add("vm/java/controller.java.vm");
+        return velocityList;
     }
 
 
