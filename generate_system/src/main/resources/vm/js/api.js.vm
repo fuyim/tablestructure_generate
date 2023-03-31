@@ -1,0 +1,53 @@
+import request from '@/utils/request'
+
+#if($className.split('_').size() > 1 )
+    #set($ClassName=${className.split("_")[1].substring(0,1).toUpperCase()} + ${className.split("_")[1].substring(1)})
+#else
+    #set($ClassName=${className.substring(0,1).toUpperCase()} + ${className.substring(1)})
+#end
+
+#foreach ($field in $fields)
+    #if(${field.primaryKey})
+export function get${ClassName}By${field.fieldName}(query) {
+    return request({
+        url: '/${ClassName.toLowerCase()}/get' + query,
+        method: 'get',
+    })
+}
+#end
+    #end
+
+
+export function get${ClassName}List() {
+    return request({
+        url: '/${ClassName.toLowerCase()}/getAll',
+        method: 'get',
+    })
+}
+
+export function add${ClassName}(query) {
+    return request({
+        url: '/${ClassName.toLowerCase()}/add',
+        method: 'get',
+        params: query
+    })
+}
+
+#foreach ($field in $fields)
+    #if(${field.primaryKey})
+
+export function delete${ClassName}By${field.fieldName}(query) {
+    return request({
+        url: '/${ClassName.toLowerCase()}/remove' + query,
+        method: 'delete',
+    })
+}
+
+export function update${ClassName}By${field.fieldName}(query) {
+    return request({
+        url: '/${ClassName.toLowerCase()}/update' + query,
+        method: 'put',
+    })
+}
+    #end
+#end

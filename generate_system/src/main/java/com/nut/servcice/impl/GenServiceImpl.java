@@ -109,6 +109,7 @@ public class GenServiceImpl implements GenService {
         velocityList.add("vm/java/service.java.vm");
         velocityList.add("vm/java/serviceImpl.java.vm");
         velocityList.add("vm/java/controller.java.vm");
+        velocityList.add("vm/js/api.js.vm");
         return velocityList;
     }
 
